@@ -1635,15 +1635,6 @@ export default class RFB extends EventTargetMixin {
         }
     }
 
-    swScreen(){
-        if(this._rfbConnectionState == "connected"){
-            RFB.messages.sw(this._sock,256,256);
-        }else{
-            alert("the vnc server is disconnected! ");
-        }
-       
-    }
-
     _handleSecurityResult() {
         if (this._sock.rQwait('VNC auth response ', 4)) { return false; }
 
@@ -2654,25 +2645,6 @@ RFB.messages = {
         return data;
     },
 
-    //switch monitor if the server have multiple monitor
-    sw(sock,x,y){
-        const buff = sock._sQ;
-        const offset = sock._sQlen;
-
-        buff[offset] = 10; // msg-type
-
-        buff[offset + 1] = 0; // status
-
-        buff[offset + 2] = x & 0xFF;
-        buff[offset + 3] = (x >> 8) & 0xFF;
-        buff[offset + 4] = y & 0xFF;
-        buff[offset + 5] = (y >> 8) & 0xFF;
-
-        sock._sQlen += 6;
-        sock.flush();
-
-    },
-    
     extendedClipboardProvide(sock, formats, inData) {
         // Deflate incomming data and their sizes
         let deflator = new Deflator();
